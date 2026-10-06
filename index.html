@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mara – Owner admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14213D; --ink-2:#22325A; --paper:#F3F5F7; --white:#fff;
+  --teal:#0E7C86; --teal-l:#D7EEF0; --gold:#F0B429; --gold-l:#FBEBC2;
+  --rose:#C8433E; --rose-l:#F6DAD8; --slate:#56657A; --line:#D8DEE5;
+  --display:"Bricolage Grotesque",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font:15px/1.5 var(--body);color:var(--ink);background:var(--paper);-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+
+/* sidebar */
+aside.side{background:var(--ink);color:#C9D3E6;padding:24px 14px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{display:flex;align-items:center;gap:10px;padding:0 10px 28px;color:#fff;font:700 24px var(--display);letter-spacing:-.02em}
+.brand svg{flex:none}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;justify-content:space-between;align-items:center;width:100%;padding:10px 12px;border:0;border-radius:8px;background:none;text-align:left;color:inherit}
+.nav button:hover{background:rgba(255,255,255,.06)}
+.nav button[aria-current=page]{background:var(--ink-2);color:#fff}
+.nav :focus-visible,.me:focus-visible{outline-color:var(--gold)}
+.badge{background:var(--gold);color:var(--ink);font-size:12px;font-weight:600;border-radius:99px;padding:0 8px;min-width:22px;text-align:center}
+.me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:12px 10px;border-top:1px solid rgba(255,255,255,.12)}
+.me b{display:block;color:#fff;font-weight:600;line-height:1.2}
+.me small{font-size:13px}
+.av{width:34px;height:34px;border-radius:50%;background:var(--teal);color:#fff;display:grid;place-items:center;font-weight:600}
+
+/* main */
+main{padding:32px 40px 56px;min-width:0}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{font:700 32px/1.1 var(--display);letter-spacing:-.02em}
+.sub{color:var(--slate);margin-top:6px}
+.btn{border:1px solid var(--ink);background:var(--ink);color:#fff;border-radius:8px;padding:8px 16px;font-weight:500}
+.btn:hover{background:var(--ink-2)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.sm{padding:5px 12px;font-size:14px}
+.btn[disabled]{opacity:.55;cursor:default}
+
+/* figures strip */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);margin-top:28px;border-block:1px solid var(--line)}
+.fig{padding:18px 20px 18px 0}
+.fig+.fig{padding-left:20px;border-left:1px solid var(--line)}
+.fig .n{font:700 36px/1.1 var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fig .l{color:var(--slate);margin-top:2px}
+.fig .d{font-size:13px;margin-top:6px;color:var(--teal);font-weight:500}
+.fig .d.bad{color:var(--rose)}
+
+/* work area */
+.work{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:32px;margin-top:32px;align-items:start}
+.panel{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px}
+.ph{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+h2{font:600 20px var(--display);letter-spacing:-.01em}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--slate)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1px solid var(--c);background:var(--c)}
+.legend i.up{background:#fff;border-style:dashed;--c:var(--slate)}
+
+/* timeline */
+.tl-scroll{overflow-x:auto}
+.tl{min-width:640px}
+.tl .cols{display:grid;grid-template-columns:200px 1fr}
+.tl .months{position:relative;height:22px;font-size:12px;color:var(--slate)}
+.tl .months span{position:absolute;top:0;padding-left:5px;border-left:1px solid var(--line);height:22px}
+.row{display:grid;grid-template-columns:200px 1fr;align-items:center;width:100%;border:0;border-top:1px solid var(--line);background:none;text-align:left;padding:0}
+.row:hover{background:#F8FAFB}
+.row .who{padding:8px 12px 8px 0}
+.row .who b{display:block;font-weight:600;line-height:1.25}
+.row .who small{color:var(--slate);font-size:13px}
+.track{position:relative;height:60px;background:repeating-linear-gradient(90deg,#E9EDF1 0 1px,transparent 1px var(--wk))}
+.track::after{content:"";position:absolute;top:0;bottom:0;left:var(--today);width:2px;background:var(--ink)}
+.bar{position:absolute;top:16px;height:28px;border-radius:5px;border:1px solid var(--c);background:var(--cl);overflow:hidden}
+.bar i{position:absolute;inset:0 auto 0 0;background:var(--c);width:var(--fill)}
+.bar.up{background:#fff;border:1px dashed var(--slate)}
+.s-ok{--c:var(--teal);--cl:var(--teal-l)} .s-watch{--c:#C98F0A;--cl:var(--gold-l)} .s-risk{--c:var(--rose);--cl:var(--rose-l)}
+.foot{position:relative;height:30px}
+.flag{position:absolute;left:var(--today);top:6px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;padding:1px 10px;border-radius:99px;white-space:nowrap}
+@media (prefers-reduced-motion:no-preference){
+  .bar{transform-origin:left;animation:grow .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i)*70ms)}
+  @keyframes grow{from{transform:scaleX(0)}}
+}
+
+/* attention */
+.att{list-style:none;display:flex;flex-direction:column;gap:14px}
+.att li{border-left:3px solid var(--gold);padding:2px 0 2px 14px}
+.att li.risk{border-color:var(--rose)}
+.att b{display:block;font-weight:600;line-height:1.3}
+.att p{color:var(--slate);font-size:14px;margin:2px 0 8px}
+.empty{color:var(--slate)}
+
+/* tables */
+.tools{display:flex;gap:12px;flex-wrap:wrap;margin:24px 0 16px}
+.tools input,.tools select{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 12px;min-width:200px}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-weight:500;color:var(--slate);font-size:13px;padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 10px}
+.chip{display:inline-block;border-radius:99px;padding:1px 10px;font-size:13px;font-weight:500}
+.chip.ok{background:var(--teal-l);color:#0A5A62}.chip.behind{background:var(--gold-l);color:#7A5600}.chip.inactive{background:var(--rose-l);color:#8E2B27}
+.mini{display:inline-block;width:90px;height:6px;border-radius:3px;background:#E3E8ED;vertical-align:middle;margin-right:8px;overflow:hidden}
+.mini i{display:block;height:100%;background:var(--teal)}
+
+/* revenue */
+.rev{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;margin-top:28px}
+.cols-chart{display:flex;align-items:flex-end;gap:14px;height:220px;padding-top:10px}
+.cc{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:6px;font-size:13px;color:var(--slate)}
+.cc .v{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:500}
+.cc .b{width:100%;background:var(--teal);border-radius:5px 5px 0 0}
+.cc.part .b{background:repeating-linear-gradient(135deg,var(--teal-l) 0 6px,#fff 6px 12px);border:1px dashed var(--teal)}
+.hb{display:grid;grid-template-columns:1fr auto;gap:2px 12px;margin-bottom:14px}
+.hb .t{grid-column:1/-1;height:8px;border-radius:4px;background:#E3E8ED;overflow:hidden}
+.hb .t i{display:block;height:100%;background:var(--ink)}
+
+/* drawer */
+.scrim{position:fixed;inset:0;background:rgba(20,33,61,.45);display:none;z-index:20}
+.scrim.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:#fff;padding:28px;overflow:auto;transform:translateX(100%);transition:transform .25s ease;z-index:21;box-shadow:-12px 0 32px rgba(20,33,61,.18)}
+.drawer.open{transform:none}
+@media (prefers-reduced-motion:reduce){.drawer{transition:none}}
+.drawer h3{font:700 24px/1.15 var(--display);letter-spacing:-.01em;margin:6px 0 4px;padding-right:40px}
+.x{position:absolute;top:18px;right:18px;border:1px solid var(--line);background:#fff;border-radius:8px;width:36px;height:36px;font-size:20px;line-height:1}
+.dl{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px;margin:24px 0}
+.dl dt{color:var(--slate);font-size:13px}
+.dl dd{font:600 22px var(--display);font-variant-numeric:tabular-nums}
+.spark{display:flex;align-items:flex-end;gap:8px;height:80px;margin:8px 0 4px}
+.spark div{flex:1;background:var(--teal);border-radius:4px 4px 0 0;position:relative}
+.spark div.low{background:var(--rose)}
+.spark small{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:12px;color:var(--slate)}
+.dact{display:flex;gap:10px;margin-top:28px;flex-wrap:wrap}
+
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;opacity:0;pointer-events:none;transition:.2s;z-index:30}
+#toast.on{opacity:1;transform:translateX(-50%)}
+
+@media (max-width:1100px){.work,.rev{grid-template-columns:1fr}}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  aside.side{position:static;height:auto;padding:14px}
+  .brand{padding-bottom:12px}
+  .nav{flex-direction:row;overflow-x:auto}
+  .nav button{white-space:nowrap;gap:8px;width:auto}
+  .me{display:none}
+  main{padding:24px 18px 48px}
+  .strip{grid-template-columns:1fr 1fr}
+  .fig:nth-child(3){padding-left:0;border-left:0}
+  .fig:nth-child(n+3){border-top:1px solid var(--line)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#0E7C86"/><path d="M6 21V9l8 8 8-8v12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Mara
+    </div>
+    <nav class="nav" id="nav" aria-label="Main"></nav>
+    <div class="me"><div class="av" aria-hidden="true">O</div><div><b>Owner</b><small>Admin access</small></div></div>
+  </aside>
+  <main id="main" tabindex="-1"></main>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dtitle" aria-hidden="true"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const TODAY = new Date(2026, 9, 3);
+const T0 = new Date(2026, 7, 31), T1 = new Date(2026, 11, 20);
+const DAY = 864e5, SPAN = (T1 - T0) / DAY;
+const pct = d => Math.max(0, Math.min(100, (d - T0) / (T1 - T0) * 100));
+const fmt = d => d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
+const money = n => '$' + n.toLocaleString('en-US');
+
+const cohorts = [
+  {id:'sql', name:'SQL for Operators', ins:'Ravi Menon', s:new Date(2026,7,31), e:new Date(2026,9,25), enrolled:38, seats:40, att:58, ontime:62, weekly:[86,81,72,64,58]},
+  {id:'pam', name:'Product Analytics for Managers', ins:'Dana Okafor', s:new Date(2026,8,14), e:new Date(2026,10,8), enrolled:42, seats:48, att:88, ontime:91, weekly:[91,89,88]},
+  {id:'dst', name:'Data Storytelling', ins:'Elise Cho', s:new Date(2026,8,21), e:new Date(2026,10,15), enrolled:31, seats:36, att:84, ontime:86, weekly:[86,83,84]},
+  {id:'idc', name:'Instructional Design Certificate', ins:'Hannah Weiss', s:new Date(2026,8,28), e:new Date(2026,11,13), enrolled:28, seats:30, att:76, ontime:80, weekly:[76]},
+  {id:'lrt', name:'Leading Remote Teams', ins:'Tomás Reyes', s:new Date(2026,9,5), e:new Date(2026,10,29), enrolled:35, seats:40, att:null, ontime:null, weekly:[]},
+  {id:'uxr', name:'UX Research Methods', ins:'Kofi Mensah', s:new Date(2026,9,19), e:new Date(2026,11,13), enrolled:24, seats:30, att:null, ontime:null, weekly:[]}
+];
+const status = c => c.s > TODAY ? 'up' : c.att < 65 ? 'risk' : c.att < 78 ? 'watch' : 'ok';
+const statusLabel = {ok:'On track', watch:'Needs attention', risk:'At risk', up:'Not started'};
+
+const instructors = [
+  {n:'Dana Okafor', c:'Product Analytics for Managers', r:'4.9', l:42, owed:1900, paid:false},
+  {n:'Ravi Menon', c:'SQL for Operators', r:'4.7', l:38, owed:1450, paid:false},
+  {n:'Elise Cho', c:'Data Storytelling', r:'4.8', l:31, owed:1470, paid:false},
+  {n:'Hannah Weiss', c:'Instructional Design Certificate', r:'4.9', l:28, owed:0, paid:true},
+  {n:'Tomás Reyes', c:'Leading Remote Teams', r:'4.6', l:35, owed:0, paid:true},
+  {n:'Kofi Mensah', c:'UX Research Methods', r:'–', l:24, owed:0, paid:true}
+];
+const learners = [
+  ['Amira Haddad','Product Analytics for Managers',72,'Today','ok'],
+  ['Ben Fischer','SQL for Operators',41,'9 days ago','inactive'],
+  ['Chiara Rossi','Data Storytelling',64,'Yesterday','ok'],
+  ['Daniel Park','SQL for Operators',55,'2 days ago','behind'],
+  ['Esther Njoroge','Instructional Design Certificate',82,'Today','ok'],
+  ['Farid Karimi','Product Analytics for Managers',49,'3 days ago','behind'],
+  ['Grace Liu','Data Storytelling',70,'Today','ok'],
+  ['Hugo Almeida','SQL for Operators',38,'11 days ago','inactive'],
+  ['Ines Duarte','Product Analytics for Managers',76,'Yesterday','ok'],
+  ['Jamal Wright','Instructional Design Certificate',68,'2 days ago','ok'],
+  ['Katya Volkova','SQL for Operators',60,'Today','ok'],
+  ['Leo Brandt','Data Storytelling',47,'8 days ago','inactive']
+];
+const learnerChip = {ok:'On track', behind:'Falling behind', inactive:'Inactive 7+ days'};
+
+let items = [
+  {id:'pay', cls:'', t:'Approve 3 instructor payouts', d:'$4,820 for September teaching.', a:'Approve payouts'},
+  {id:'ref', cls:'', t:'2 refund requests waiting', d:'$1,190 total, both inside the 14-day window.', a:'Approve refunds'},
+  {id:'risk', cls:'risk', t:'SQL for Operators attendance fell to 58%', d:'It was 81% three weeks ago.', a:'Open cohort'},
+  {id:'ren', cls:'', t:'Dana Okafor’s contract ends Oct 15', d:'She teaches Product Analytics for Managers.', a:'Send renewal offer'}
+];
+
+const months = [['May',52300],['Jun',61200],['Jul',68900],['Aug',74000],['Sep',86400],['Oct',9700]];
+const courseRev = [['Product Analytics for Managers',24800],['Leading Remote Teams',19200],['SQL for Operators',16900],['Data Storytelling',13700],['Instructional Design Certificate',11800]];
+
+let view = 'overview';
+const views = [['overview','Overview'],['learners','Learners'],['instructors','Instructors'],['revenue','Revenue']];
+const $ = s => document.querySelector(s);
+const main = $('#main');
+
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toast.h); toast.h = setTimeout(() => t.classList.remove('on'), 2600);
+}
+
+function renderNav(){
+  const pending = instructors.filter(i => !i.paid && i.owed).length;
+  $('#nav').innerHTML = views.map(([k,l]) =>
+    `<button data-view="${k}" ${view===k?'aria-current="page"':''}>${l}${k==='instructors'&&pending?`<span class="badge">${pending}</span>`:''}</button>`).join('');
+}
+
+function head(title, sub, extra=''){
+  return `<div class="top"><div><h1>${title}</h1><p class="sub">${sub}</p></div>${extra}</div>`;
+}
+
+function overview(){
+  const wk = (7 / SPAN * 100).toFixed(4) + '%';
+  const today = pct(TODAY).toFixed(3) + '%';
+  const mlabels = [['Sep',new Date(2026,8,1)],['Oct',new Date(2026,9,1)],['Nov',new Date(2026,10,1)],['Dec',new Date(2026,11,1)]]
+    .map(([n,d]) => `<span style="left:${pct(d)}%">${n}</span>`).join('');
+  const rows = cohorts.map((c,i) => {
+    const st = status(c), left = pct(c.s), width = pct(c.e) - left;
+    const fill = st==='up' ? 0 : Math.min(100, (TODAY - c.s) / (c.e - c.s) * 100);
+    const wkNo = Math.floor((TODAY - c.s)/(7*DAY)) + 1, wkTot = Math.ceil((c.e - c.s)/(7*DAY));
+    const meta = st==='up' ? `Starts ${fmt(c.s)}` : `Week ${wkNo} of ${wkTot}`;
+    return `<button class="row" data-cohort="${c.id}" aria-label="${c.name}, ${statusLabel[st]}, ${meta}">
+      <div class="who"><b>${c.name}</b><small>${meta}, ${c.enrolled} of ${c.seats} seats</small></div>
+      <div class="track" style="--wk:${wk};--today:${today}">
+        <div class="bar s-${st==='up'?'':st} ${st==='up'?'up':''}" style="left:${left}%;width:${width}%;--fill:${fill}%;--i:${i}" title="${fmt(c.s)} to ${fmt(c.e)}">${st==='up'?'':'<i></i>'}</div>
+      </div></button>`;
+  }).join('');
+
+  const att = items.length ? `<ul class="att">${items.map(i =>
+    `<li class="${i.cls}"><b>${i.t}</b><p>${i.d}</p><button class="btn sm ${i.id==='risk'?'ghost':''}" data-item="${i.id}">${i.a}</button></li>`).join('')}</ul>`
+    : `<p class="empty">Nothing needs you right now. New payouts, refunds and cohort alerts show up here.</p>`;
+
+  return head('Overview', 'Saturday, October 3. Term 4 runs Aug 31 to Dec 20.',
+    `<button class="btn ghost" data-act="export">Export cohort report</button>`) + `
+  <div class="strip">
+    <div class="fig"><div class="n">198</div><div class="l">Learners enrolled</div><div class="d">14 more than last term</div></div>
+    <div class="fig"><div class="n">$86,400</div><div class="l">Revenue in September</div><div class="d">Up 16.8% on August</div></div>
+    <div class="fig"><div class="n">81%</div><div class="l">Completion, last term</div><div class="d">Up 3 points</div></div>
+    <div class="fig"><div class="n">1.8%</div><div class="l">Refund rate</div><div class="d bad">Up 0.4 points</div></div>
+  </div>
+  <div class="work">
+    <section class="panel" aria-labelledby="tlh">
+      <div class="ph"><h2 id="tlh">Cohort timeline</h2>
+        <div class="legend"><span><i style="--c:var(--teal)"></i>On track</span><span><i style="--c:#C98F0A"></i>Needs attention</span><span><i style="--c:var(--rose)"></i>At risk</span><span><i class="up"></i>Not started</span></div></div>
+      <div class="tl-scroll"><div class="tl">
+        <div class="cols"><div></div><div class="months">${mlabels}</div></div>
+        ${rows}
+        <div class="cols"><div></div><div class="foot" style="--today:${today}"><span class="flag">Today, ${fmt(TODAY)}</span></div></div>
+      </div></div>
+    </section>
+    <section class="panel" aria-labelledby="nh">
+      <div class="ph"><h2 id="nh">Needs you</h2><span class="sub" style="margin:0">${items.length} open</span></div>
+      ${att}
+    </section>
+  </div>`;
+}
+
+function learnersView(){
+  const opts = ['All cohorts', ...new Set(learners.map(l => l[1]))].map(o => `<option>${o}</option>`).join('');
+  return head('Learners', 'Everyone enrolled in a running cohort, sorted by who needs a nudge first.') + `
+  <div class="tools"><input id="q" type="search" placeholder="Search by name" aria-label="Search learners"><select id="cf" aria-label="Filter by cohort">${opts}</select></div>
+  <div class="tablewrap"><table><thead><tr><th>Learner</th><th>Cohort</th><th>Coursework done</th><th>Last active</th><th>Status</th></tr></thead><tbody id="lrows"></tbody></table></div>`;
+}
+function fillLearners(){
+  const q = ($('#q').value || '').toLowerCase(), c = $('#cf').value;
+  const rank = {inactive:0, behind:1, ok:2};
+  const list = learners.filter(l => (c==='All cohorts'||l[1]===c) && l[0].toLowerCase().includes(q)).sort((a,b)=>rank[a[4]]-rank[b[4]]);
+  $('#lrows').innerHTML = list.length ? list.map(l => `<tr><td><b>${l[0]}</b></td><td>${l[1]}</td>
+    <td><span class="mini"><i style="width:${l[2]}%"></i></span>${l[2]}%</td><td>${l[3]}</td><td><span class="chip ${l[4]}">${learnerChip[l[4]]}</span></td></tr>`).join('')
+    : `<tr><td colspan="5" class="empty">No learners match. Clear the search or pick another cohort.</td></tr>`;
+}
+
+function instructorsView(){
+  const owed = instructors.filter(i => !i.paid).reduce((s,i)=>s+i.owed,0);
+  return head('Instructors', owed ? `${money(owed)} in September payouts waiting for your approval.` : 'All September payouts are approved.',
+    owed ? `<button class="btn" data-item="pay">Approve all payouts</button>` : '') + `
+  <div class="tablewrap" style="margin-top:24px"><table><thead><tr><th>Instructor</th><th>Cohort</th><th class="num">Rating</th><th class="num">Learners</th><th class="num">September payout</th><th>Status</th></tr></thead><tbody>
+  ${instructors.map(i => `<tr><td><b>${i.n}</b></td><td>${i.c}</td><td class="num">${i.r}</td><td class="num">${i.l}</td>
+    <td class="num">${i.owed?money(i.owed):'–'}</td><td>${i.paid?'<span class="chip ok">'+(i.owed?'Approved':'Nothing due')+'</span>':'<span class="chip behind">Waiting for approval</span>'}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+function revenueView(){
+  const max = 90000;
+  return head('Revenue', 'September brought in $86,400, the best month this year.') + `
+  <div class="rev">
+    <section class="panel"><div class="ph"><h2>Monthly revenue</h2></div>
+      <div class="cols-chart">${months.map(([m,v],i) => `<div class="cc ${i===5?'part':''}"><span class="v">$${(v/1000).toFixed(1)}k</span><div class="b" style="height:${v/max*160}px"></div>${m}${i===5?' to date':''}</div>`).join('')}</div></section>
+    <section class="panel"><div class="ph"><h2>September by course</h2></div>
+      ${courseRev.map(([n,v]) => `<div class="hb"><span>${n}</span><b style="font-variant-numeric:tabular-nums">${money(v)}</b><div class="t"><i style="width:${v/24800*100}%"></i></div></div>`).join('')}</section>
+  </div>`;
+}
+
+function render(){
+  renderNav();
+  main.innerHTML = {overview, learners:learnersView, instructors:instructorsView, revenue:revenueView}[view]();
+  if (view==='learners'){ fillLearners(); $('#q').oninput = fillLearners; $('#cf').onchange = fillLearners; }
+}
+
+/* drawer */
+let lastFocus = null;
+function openCohort(id){
+  const c = cohorts.find(x => x.id===id), st = status(c);
+  const spark = c.weekly.length ? `<div class="spark" role="img" aria-label="Weekly attendance: ${c.weekly.join('%, ')}%">${c.weekly.map((v,i)=>`<div class="${v<65?'low':''}" style="height:${v}%"><small>${v}%</small></div>`).join('')}</div><small class="sub">Attendance by week</small>` : '';
+  $('#drawer').innerHTML = `<button class="x" data-act="close" aria-label="Close details">×</button>
+    <span class="chip ${st==='risk'?'inactive':st==='watch'?'behind':st==='up'?'':'ok'}" ${st==='up'?'style="background:#E3E8ED"':''}>${statusLabel[st]}</span>
+    <h3 id="dtitle">${c.name}</h3><p class="sub">${c.ins}, ${fmt(c.s)} to ${fmt(c.e)}</p>
+    <dl class="dl"><div><dt>Seats filled</dt><dd>${c.enrolled} of ${c.seats}</dd></div>
+    <div><dt>Attendance</dt><dd>${c.att==null?'–':c.att+'%'}</dd></div>
+    <div><dt>Work handed in on time</dt><dd>${c.ontime==null?'–':c.ontime+'%'}</dd></div>
+    <div><dt>Open seats</dt><dd>${c.seats-c.enrolled}</dd></div></dl>${spark}
+    <div class="dact"><button class="btn" data-act="msg" data-name="${c.name}">Message cohort</button><button class="btn ghost" data-act="close">Close</button></div>`;
+  lastFocus = document.activeElement;
+  $('#scrim').classList.add('open'); $('#drawer').classList.add('open'); $('#drawer').setAttribute('aria-hidden','false');
+  $('#drawer .x').focus();
+}
+function closeDrawer(){
+  $('#scrim').classList.remove('open'); $('#drawer').classList.remove('open'); $('#drawer').setAttribute('aria-hidden','true');
+  if (lastFocus) lastFocus.focus();
+}
+
+function runItem(id){
+  if (id==='risk'){ openCohort('sql'); return; }
+  if (id==='pay'){
+    const n = instructors.filter(i=>!i.paid&&i.owed);
+    const sum = n.reduce((s,i)=>s+i.owed,0);
+    n.forEach(i => i.paid = true);
+    items = items.filter(i => i.id!=='pay');
+    toast(`Approved ${n.length} payouts, ${money(sum)} total`);
+  } else if (id==='ref'){ items = items.filter(i => i.id!=='ref'); toast('Approved 2 refunds'); }
+  else if (id==='ren'){ items = items.filter(i => i.id!=='ren'); toast('Sent renewal offer to Dana Okafor'); }
+  render();
+}
+
+function exportCsv(){
+  const rows = [['Cohort','Instructor','Start','End','Enrolled','Seats','Attendance %','On-time work %']]
+    .concat(cohorts.map(c => [c.name,c.ins,fmt(c.s),fmt(c.e),c.enrolled,c.seats,c.att??'',c.ontime??'']));
+  const csv = rows.map(r => r.map(v => `"${v}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv'})); a.download = 'mara-cohorts.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('Exported cohort report');
+}
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-view],[data-cohort],[data-item],[data-act]');
+  if (!t) { if (e.target.id==='scrim') closeDrawer(); return; }
+  if (t.dataset.view){ view = t.dataset.view; render(); main.focus(); }
+  else if (t.dataset.cohort) openCohort(t.dataset.cohort);
+  else if (t.dataset.item) runItem(t.dataset.item);
+  else if (t.dataset.act==='close') closeDrawer();
+  else if (t.dataset.act==='export') exportCsv();
+  else if (t.dataset.act==='msg'){ closeDrawer(); toast(`Message to ${t.dataset.name} is ready to write`); }
+});
+document.addEventListener('keydown', e => { if (e.key==='Escape' && $('#drawer').classList.contains('open')) closeDrawer(); });
+
+render();
+</script>
+</body>
+</html>
